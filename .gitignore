@@ -1,0 +1,25 @@
+# Dependency directories
+node_modules/
+
+# Build outputs
+**/dist/
+**/build/
+**/.turbo/
+
+# Environment and local config
+.env
+.env.*
+apps/**/.env
+supabase/.branches
+
+# Editor & system
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
