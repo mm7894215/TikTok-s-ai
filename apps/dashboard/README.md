@@ -8,7 +8,7 @@
    npm install
    npm run dev:dashboard
    ```
-2. 复制 `.env.example` 为 `.env`，填入 Supabase 项目 URL 与匿名 KEY。
+2. 复制 `.env.example` 为 `.env`，填入 Supabase 项目 URL 与匿名 KEY。若未配置环境变量，前端会自动使用本地内置的示例榜单与视频数据，确保无 Supabase 也能正常预览。
 3. 访问 `http://localhost:4173` 查看页面。
 
 ## 结构

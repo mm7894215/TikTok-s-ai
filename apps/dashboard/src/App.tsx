@@ -11,15 +11,52 @@ export default function App() {
   const [videos, setVideos] = useState<VideoMetric[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const fallbackTrends: TrendItem[] = [
+    { id: "sound-1", label: "Get It Right", velocity: 12.5, acceleration: 3.1, type: "sound" },
+    { id: "tag-1", label: "#summeroutfit", velocity: 10.2, acceleration: 2.4, type: "tag" },
+    { id: "sound-2", label: "Happy Vibes", velocity: 8.9, acceleration: 1.8, type: "sound" }
+  ];
+
+  const fallbackVideos: VideoMetric[] = [
+    {
+      id: "7234567890",
+      title: "可拆卸收纳化妆包",
+      author: "beauty_lab",
+      country: "US",
+      views: 389000,
+      likes: 18000,
+      comments: 3200,
+      shares: 2400,
+      viralVelocity: 2.35,
+      commercialScore: 8.7,
+      hashtags: ["makeup", "organizer", "travel"]
+    },
+    {
+      id: "7234567891",
+      title: "迷你筋膜枪评测",
+      author: "fitgear",
+      country: "UK",
+      views: 210000,
+      likes: 9200,
+      comments: 1300,
+      shares: 900,
+      viralVelocity: 1.62,
+      commercialScore: 7.9,
+      hashtags: ["fitness", "recovery", "gift"]
+    }
+  ];
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
       try {
-        const { data: trendData } = await supabase
-          .from("trend_signals")
-          .select("id, entity_type, entity_id, velocity, acceleration")
-          .order("velocity", { ascending: false })
-          .limit(6);
+        const { data: trendData } = supabase
+          ? await supabase
+              .from("trend_signals")
+              .select("id, entity_type, entity_id, velocity, acceleration")
+              .order("velocity", { ascending: false })
+              .limit(6)
+          : { data: null };
 
         const mappedTrends = trendData?.map((item) => ({
           id: item.id,
@@ -29,21 +66,17 @@ export default function App() {
           type: item.entity_type === "sound" ? "sound" : "tag"
         }));
 
-        setTrendItems(
-          mappedTrends?.length
-            ? mappedTrends
-            : [
-                { id: "sound-1", label: "Get It Right", velocity: 12.5, acceleration: 3.1, type: "sound" },
-                { id: "tag-1", label: "#summeroutfit", velocity: 10.2, acceleration: 2.4, type: "tag" },
-                { id: "sound-2", label: "Happy Vibes", velocity: 8.9, acceleration: 1.8, type: "sound" }
-              ]
-        );
+        setTrendItems(mappedTrends?.length ? mappedTrends : fallbackTrends);
 
-        const { data: videoRows } = await supabase
-          .from("video_overview")
-          .select("id, title, author_id, country, views, likes, comments, shares, hashtags, views_per_hour, commercial_score")
-          .order("views_per_hour", { ascending: false, nullsFirst: false })
-          .limit(10);
+        const { data: videoRows } = supabase
+          ? await supabase
+              .from("video_overview")
+              .select(
+                "id, title, author_id, country, views, likes, comments, shares, hashtags, views_per_hour, commercial_score"
+              )
+              .order("views_per_hour", { ascending: false, nullsFirst: false })
+              .limit(10)
+          : { data: null };
 
         const mappedVideos = videoRows?.map((row) => ({
           id: row.id,
@@ -59,38 +92,7 @@ export default function App() {
           hashtags: (row.hashtags as string[] | null) ?? []
         }));
 
-        setVideos(
-          mappedVideos?.length
-            ? mappedVideos
-            : [
-                {
-                  id: "7234567890",
-                  title: "可拆卸收纳化妆包",
-                  author: "beauty_lab",
-                  country: "US",
-                  views: 389000,
-                  likes: 18000,
-                  comments: 3200,
-                  shares: 2400,
-                  viralVelocity: 2.35,
-                  commercialScore: 8.7,
-                  hashtags: ["makeup", "organizer", "travel"]
-                },
-                {
-                  id: "7234567891",
-                  title: "迷你筋膜枪评测",
-                  author: "fitgear",
-                  country: "UK",
-                  views: 210000,
-                  likes: 9200,
-                  comments: 1300,
-                  shares: 900,
-                  viralVelocity: 1.62,
-                  commercialScore: 7.9,
-                  hashtags: ["fitness", "recovery", "gift"]
-                }
-              ]
-        );
+        setVideos(mappedVideos?.length ? mappedVideos : fallbackVideos);
       } finally {
         setLoading(false);
       }
