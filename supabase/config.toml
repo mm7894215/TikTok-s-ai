@@ -1,0 +1,4 @@
+project_id = "tiktok-intel"
+api = "http://localhost:54321"
+[functions]
+timezone = "Asia/Shanghai"
