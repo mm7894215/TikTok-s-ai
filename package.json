@@ -1,0 +1,21 @@
+{
+  "name": "tiktok-intel-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:dashboard": "npm --workspace apps/dashboard run dev",
+    "build:dashboard": "npm --workspace apps/dashboard run build",
+    "lint:dashboard": "npm --workspace apps/dashboard run lint",
+    "dev:extension": "npm --workspace apps/extension run dev",
+    "build:extension": "npm --workspace apps/extension run build",
+    "lint:extension": "npm --workspace apps/extension run lint",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
